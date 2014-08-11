@@ -17,7 +17,7 @@ library(ggplot2)
 library(mcmcplots)
 library(stringr)
 
-setwd("~/Dropbox/Glasnost/Premier_League")
+setwd("~/[DIR]/Premier_League")
 
 ## Load the data
 load("Premier_League.Rdata")
