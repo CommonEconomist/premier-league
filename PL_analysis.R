@@ -140,12 +140,3 @@ mean((d$AwayGoals-m_pred[, "mean_away_goal"])^2) # MSE: 1.11
 
 # The match results
 mean(d$MatchResult == m_pred[, "match_result"]) # 53%, a bit low
-
-## Plot results
-par(mar=c(4,3,3,3))
-qplot(match_result,data=p,geom="bar",binwidth=0.5,xlim=c(-1,1.5),
-      xlab="Predicted match result",ylab="")
-qplot(MatchResult,data=d,geom="bar",binwidth=0.5,xlim=c(-1,1.5),
-      xlab="Actual match result",ylab="")
-
-
