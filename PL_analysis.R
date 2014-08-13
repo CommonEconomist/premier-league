@@ -128,6 +128,7 @@ m_pred <- sapply(1:nrow(d), function(i) {
     rand_match_result = match_results[rand_i])
 })
 m_pred<-t(m_pred) # Transpose
+<<<<<<< HEAD
 
 ## Check the accuracy of the predictions
 
@@ -147,5 +148,17 @@ qplot(match_result,data=p,geom="bar",binwidth=0.5,xlim=c(-1,1.5),
       xlab="Predicted match result",ylab="")
 qplot(MatchResult,data=d,geom="bar",binwidth=0.5,xlim=c(-1,1.5),
       xlab="Actual match result",ylab="")
+=======
 
+## Check the accuracy of the predictions
 
+# Number of scored goals
+mean(d$HomeGoals == m_pred[, "mode_home_goal"]) # 34 % correct
+mean(d$AwayGoals == m_pred[, "mode_away_goal"]) # 39 % correct
+>>>>>>> e9cae24985f1bb499a678342fe4bf3faa38d1e8d
+
+mean((d$HomeGoals-m_pred[, "mean_home_goal"])^2) # MSE: 1.49
+mean((d$AwayGoals-m_pred[, "mean_away_goal"])^2) # MSE: 1.11
+
+# The match results
+mean(d$MatchResult == m_pred[, "match_result"]) # 53%, a bit low
