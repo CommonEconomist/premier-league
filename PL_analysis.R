@@ -1,5 +1,5 @@
 #==============================================================================
-# This version:  07-08-2014
+# This version:  13-08-2014
 # First version: 25-05-2015
 # Modeling match results for the Premier League 1993-2014
 # Based on: 
@@ -31,10 +31,11 @@ qplot(Season, HomeTeam, data=PLeague, ylab="Team", xlab = "Particicipation by Se
 
 ## If not done: Recode variable for MatchResult:
 # -1 = Away win, 0= draw, 1 = Home win
-PLeague$MatchResult<-sign(PLeague$HomeGoals-PLeague$AwayGoals)
+#PLeague$MatchResult<-sign(PLeague$HomeGoals-PLeague$AwayGoals)
 
 ## Create data frame omitting coming season's fixtures
 d<-na.omit(PLeague)
+cur<-PLeague[-1:-8144,]
 
 ## Model indices
 teams<-sort(unique(c(d$HomeTeam,d$AwayTeam)))
@@ -56,7 +57,6 @@ n_seasons=length(seasons)
 hist(c(AwayGoals,HomeGoals),xlim=c(-0.5,9),breaks=-1:9+0.5,
      main = "Distribution of goals scored by a team in a Premier League match.",
      ylab="",xlab="",col="steelblue4")
-
 
 ## Model estimation
 
@@ -91,17 +91,20 @@ team_skill<-team_skill[,order(colMeans(team_skill),decreasing = T)]
 par(mar=c(3,1,2,1))
 caterplot(team_skill,labels.loc="above",val.lim = c(0.7, 3.8))
 
-## Predictions
+## In-sample predictions
 
 col_name <- function(name, ...) {
     paste0(name, "[", paste(..., sep = ","), "]")
 }
 
 n <- nrow(mm1)
-m_pred <- sapply(1:nrow(PLeague), function(i) {
-  home_team <- which(teams == PLeague$HomeTeam[i])
-  away_team <- which(teams == PLeague$AwayTeam[i])
-  season <- which(seasons == PLeague$Season[i])
+m_pred <- sapply(1:nrow(d), function(i) {
+  home_team <- which(teams == d$HomeTeam[i])
+  away_team <- which(teams == d$AwayTeam[i])
+  season <- which(seasons == d$Season[i])
+  print(season)
+  print(home_team)
+  print(away_team)
   home_skill <- mm1[, col_name("skill", season, home_team)]
   away_skill <- mm1[, col_name("skill", season, away_team)]
   home_baseline <- mm1[, col_name("home_baseline", season)]
@@ -124,7 +127,25 @@ m_pred <- sapply(1:nrow(PLeague), function(i) {
     rand_home_goal = home_goals[rand_i], rand_away_goal = away_goals[rand_i],
     rand_match_result = match_results[rand_i])
 })
+m_pred<-t(m_pred) # Transpose
 
+## Check the accuracy of the predictions
 
+# Number of scored goals
+mean(d$HomeGoals == m_pred[, "mode_home_goal"]) # 34 % correct
+mean(d$AwayGoals == m_pred[, "mode_away_goal"]) # 39 % correct
+
+mean((d$HomeGoals-m_pred[, "mean_home_goal"])^2) # MSE: 1.49
+mean((d$AwayGoals-m_pred[, "mean_away_goal"])^2) # MSE: 1.11
+
+# The match results
+mean(d$MatchResult == m_pred[, "match_result"]) # 53%, a bit low
+
+## Plot results
+par(mar=c(4,3,3,3))
+qplot(match_result,data=p,geom="bar",binwidth=0.5,xlim=c(-1,1.5),
+      xlab="Predicted match result",ylab="")
+qplot(MatchResult,data=d,geom="bar",binwidth=0.5,xlim=c(-1,1.5),
+      xlab="Actual match result",ylab="")
 
 
