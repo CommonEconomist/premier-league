@@ -1,5 +1,5 @@
 #==============================================================================
-# This version:  07-08-2014
+# This version:  13-08-2014
 # First version: 25-05-2015
 # Modeling match results for the Premier League 1993-2014
 # Based on: 
@@ -16,6 +16,8 @@ library(jagstools)
 library(ggplot2)
 library(mcmcplots)
 library(stringr)
+
+setwd("~/[DIR]/Premier_League")
 
 ## Load the data
 load("Premier_League.Rdata")
