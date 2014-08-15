@@ -241,3 +241,33 @@ The prediction accuracy is not very high but it is acceptable.
 mean(d$MatchResult == m_pred[, "match_result"]) # 53%
 ```
 The correct number of predicted match results is only 53% which is fairly low, essentially as good as your average television pundit. 
+
+## Update (15-08-2014):
+
+Just as a small exercise a prediction for the first game of the 2014/15 Premier League: Manchester United vs. Swansae City.
+
+Prediction is based on the skill of each team during the previous season:
+
+```R
+home_team <- which(teams == "Man United")
+away_team <- which(teams == "Swansea")
+season <- which(seasons == "2013/14")
+home_skill <- mm1[, col_name("skill", season, home_team)]
+away_skill <- mm1[, col_name("skill", season, away_team)]
+home_baseline <- mm1[, col_name("home_baseline", season)]
+away_baseline <- mm1[, col_name("away_baseline", season)]
+
+home_goals <- rpois(n, exp(home_baseline + home_skill - away_skill))
+away_goals <- rpois(n, exp(away_baseline + away_skill - home_skill))
+
+1/c("Man United" = mean(home_goals > away_goals), Draw = mean(home_goals == away_goals),
+    Swansea = mean(home_goals < away_goals))
+```
+The model gives the following odds:
+
+
+```R
+Man United       Draw    Swansea 
+  1.431981   5.309735   8.823529 
+```
+
