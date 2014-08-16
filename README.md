@@ -271,3 +271,4 @@ Man United       Draw    Swansea
   1.431981   5.309735   8.823529 
 ```
 
+**Result**: Manchester United 1 Swansea City 2
