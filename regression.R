@@ -1,10 +1,10 @@
 #******************************************************************************
-# This version:  18-06-2015
+# This version:  16-07-2015
 # First version: 25-05-2014
 # Modeling match results for the Premier League 1993-2014
 #******************************************************************************
 
-setwd("[SET DIRECTORY]")
+setwd("[SET DIR]/Premier_League")
 
 ## Libraries
 library(coda)
@@ -23,21 +23,19 @@ df<-read.csv("premier_league.csv",header=TRUE,sep=",",
 
 #### Minor adjustments ####
 
+## Set date
 df$Date<-as.Date(df$Date,"%Y-%m-%d")
 df<-df[order(df$Date),]
 
 ## Recode variable for MatchResult: -1 = Away win, 0= draw, 1 = Home win
 df$MatchResult<-sign(df$HomeGoals-df$AwayGoals)
 
-df$HomeTeam<-as.character(df$HomeTeam)
-df$AwayTeam<-as.character(df$AwayTeam)
 
 #### Figure: Premier League participation ####
 qplot(Season,HomeTeam,data=df,ylab="",xlab = "",group=HomeTeam)+
   theme_classic()+geom_line(size=3)+geom_point(size=3)
 
-#### Figure: Distribution of goals
-
+#### Figure: Distribution of goals ####
 hist(c(df$AwayGoals,df$HomeGoals),xlim=c(-0.5,10),breaks=-1:9+0.5,
      main = "Distribution of goals scored in the Premier League",
      ylab="",xlab="",las=1,tck=.02)
@@ -45,7 +43,7 @@ lines(seq(0,10),8524*dpois(seq(0,10),mean(c(df$AwayGoals,df$HomeGoals))),
       col="firebrick3",lwd=3)
 
 #### Model estimation ####
-d<-na.omit(df) # Not needed with latest data
+d<-na.omit(df) 
 
 ## Create indices
 teams<-sort(unique(c(d$HomeTeam,d$AwayTeam)))
@@ -69,17 +67,17 @@ parameters<-c("home_baseline","away_baseline","skill",
               "season_sigma","group_sigma","group_skill")                  
 model.file <- "poisson.txt"
 
-# Run regression
-system.time(m1<- jags(data=data_list,inits=NULL,parameters.to.save=parameters,
+## Run regression
+system.time(m1<-jags(data=data_list,inits=NULL,parameters.to.save=parameters,
         model.file=model.file,n.chains=4,n.iter=10000,n.burnin=2500,n.thin=2))
+
+#### Rank teams 2014/15 season ####
 
 # Process results
 lm1<-as.mcmc(m1)
 mm1<-as.matrix(lm1)
 
-
-#### Rank teams 2014/15 season ####
-
+# Team skill
 team_skill<-mm1[,str_detect(string=colnames(mm1),"skill\\[22,")]
 team_skill<-(team_skill-rowMeans(team_skill))+mm1[, "home_baseline[22]"]
 team_skill<-exp(team_skill)
@@ -94,7 +92,9 @@ team_skill<-team_skill[,order(colMeans(team_skill),decreasing = T)]
 ## Plot ranking
 par(mar=c(3,1,2,1))
 caterplot(team_skill,labels.loc="above",val.lim = c(0.7, 3.8),
+          cex=1.2,col="black",lwd=c(3,5),
           style="plain",bty="n",tck=.02)
+
 # Leaves something to be desired
 
 #### In-sample predictions ####
