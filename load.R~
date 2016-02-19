@@ -1,5 +1,7 @@
 #### Libraries, data, and functions for predicting Premier League ranking ####
 
+#### LOAD ####
+
 ## Libraries
 library(R2jags)
 library(rjags)
@@ -46,7 +48,7 @@ M<-function() {
   tau.def ~ dgamma(.01,.01)
 }
 
-#### Plot function for estimation results ####
+## Plot function for estimation results
 rankPlot<-function(x){
   ## Plot results from JAGS model fit
   ## Ranking teams based on estimated skills.
