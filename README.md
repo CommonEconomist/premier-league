@@ -18,10 +18,10 @@ I use match data from [Football-Data](http://www.football-data.co.uk/data.php) w
 Below some figures that summarise the results. 
 Hopefully in the near future I will also focus on match-prediction, rather than only the aggregates, and improve the model. 
 
-## Predicted ranking for 2015/16 season
+#### Predicted ranking for 2015/16 season
 ![](http://i.imgur.com/D21vWDA.png)
 
-## Updated predicted ranking for 2015/16 season (February 201)6
+#### Updated predicted ranking for 2015/16 season (February 2016)
 ![](http://i.imgur.com/IYl4Yuu.png)
 
 
