@@ -18,16 +18,11 @@ I use match data from [Football-Data](http://www.football-data.co.uk/data.php) w
 Below some figures that summarise the results. 
 Hopefully in the near future I will also focus on match-prediction, rather than only the aggregates, and improve the model. 
 
-### Goal scoring versus defence, average effect for 2014/15 season
-![](http://i.imgur.com/jiFJQut.png)
-
-### Fitted ranking for 2014/15 season
-![](http://i.imgur.com/kUKLxGO.png)
-
-### Predicted ranking for 2015/16 season
+## Predicted ranking for 2015/16 season
 ![](http://i.imgur.com/D21vWDA.png)
 
-### Predicted ranking for 2015/16 season, taking into account 2014/15 results
-![](http://i.imgur.com/hxOedML.png)
+## Updated predicted ranking for 2015/16 season (February 201)6
+![](http://i.imgur.com/IYl4Yuu.png)
+
 
 
