@@ -1,13 +1,14 @@
-#### Predicting Premier League results ####
+## Predicting Premier League results 
 # Using a Bayesian hierarchical model 
 # Based on Baio & Biangiardo (2010)
 # http://discovery.ucl.ac.uk/16040/
 # Using data from the Premier League
 # http://www.football-data.co.uk/data.php
-# Model nees to be adjusted for overshrinkage
+# NB - Model needs to be adjusted for overshrinkage
 source("load.R")
 
-#### Past season: 2014/15  ####
+#------------------------------------------------------------------------------
+#### 1) 2014/15 season ####
 pl0<-pl[pl$Season=="2014/15",]
 
 ## Input data
@@ -31,7 +32,8 @@ print(season.p,digits.summary=3)
 rankPlot(season.p)
 effPlot(season.p)
 
-#### Current season: 2015/16 ####
+#------------------------------------------------------------------------------
+#### 2) 2015/16 season ####
 
 ## Input data
 teams<-sort(unique(c(pl1$HomeTeam,pl1$AwayTeam)))
@@ -65,7 +67,8 @@ mm<-as.matrix(mm);mm<-mm[,-1]
 pl1$hatHG<-round(colMeans(mm[,1:380]))
 pl1$hatAG<-round(colMeans(mm[,381:760]))
 
-#### Current season, controlling for past season ####
+#------------------------------------------------------------------------------
+#### 3) Control for past season ####
 
 ## Input data
 teams<-sort(unique(c(pl1$HomeTeam,pl1$AwayTeam,pl0$HomeTeam,pl0$AwayTeam)))
@@ -75,8 +78,10 @@ ngames=nrow(pl0)*2
 y1=c(pl0$HomeGoals,pl1$HomeGoals)
 y2=c(pl0$AwayGoals,pl1$AwayGoals)
 
-hometeam=as.numeric(c(factor(pl0$HomeTeam,levels=teams),factor(pl1$HomeTeam,levels=teams)))
-awayteam=as.numeric(c(factor(pl0$AwayTeam,levels=teams),factor(pl1$AwayTeam,levels=teams)))
+hometeam=as.numeric(c(factor(pl0$HomeTeam,levels=teams),
+                      factor(pl1$HomeTeam,levels=teams)))
+awayteam=as.numeric(c(factor(pl0$AwayTeam,levels=teams),
+                      factor(pl1$AwayTeam,levels=teams)))
 
 ## Run regression (this takes about 5 minutes)
 season.c2<-jags(data=list(ngames=ngames,y1=y1,y2=y2,hometeam=hometeam,

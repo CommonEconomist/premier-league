@@ -1,21 +1,23 @@
-#### Libraries, data, and functions for predicting Premier League ranking ####
+## Modeling Premier League results 
 
-## Libraries
+#------------------------------------------------------------------------------
+#### 1) Libraries ####
 library(R2jags)
 library(rjags)
 library(jagstools)
 library(mcmcplots)
 library(stringr)
 
-## Data
+#------------------------------------------------------------------------------
+#### 2) Data ####
 pl<-read.csv("PremierLeague.csv",header=TRUE,             # Historical PL data
              sep=",",row.names=NULL,stringsAsFactors=FALSE)
 pl1<-read.csv("PremierLeagueCurrent.csv",header=TRUE,     # Current PL season
              sep=",",row.names=NULL,stringsAsFactors=FALSE)
 
-#### Functions ####
+#------------------------------------------------------------------------------
+#### 3) Regression model ####
 
-## Regression model 
 M<-function() {
   # LIKELIHOOD AND RANDOM EFFECT MODEL FOR THE SCORING PROPENSITY
   for (g in 1:ngames) {
@@ -46,7 +48,8 @@ M<-function() {
   tau.def ~ dgamma(.01,.01)
 }
 
-#### Plot function for estimation results ####
+#------------------------------------------------------------------------------
+#### 4) Plot results ####
 rankPlot<-function(x){
   ## Plot results from JAGS model fit
   ## Ranking teams based on estimated skills.
@@ -72,7 +75,8 @@ rankPlot<-function(x){
   axis(1, tick=F)
 }
 
-#### Plot function average effects ####
+#------------------------------------------------------------------------------
+#### 5) Plot estimated effects ####
 effPlot<-function(x){
   # Get data for average effects
   att<-x$BUGSoutput$summary[1:20,1]
@@ -86,16 +90,7 @@ effPlot<-function(x){
      xlim=c(-.5,.5),ylim=c(-.5,.5))
   
     abline(v=0,lty=2,lwd=1);abline(h=0,lty=2,lwd=1) # Guiding lines
-    text(att,def,teams,cex=.8)   # Teams
+    text(att,def,teams,cex=.8)         # Teams
+  axis(1,tick=F);axis(2, tick=F,las=1) # Axis
   
-  # Axis
-  axis(1,tick=F);axis(2, tick=F,las=1)
-  minimalrug(att,side=1,line=-.5,lwd=2);minimalrug(def,side=2,line=-.5,lwd=2)  
 }
-
-
-
-
-#### Fancyaxis ####
-library(devtools)
-source_url("https://raw.githubusercontent.com/sjmurdoch/fancyaxis/master/fancyaxis.R")
