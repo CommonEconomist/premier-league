@@ -1,22 +1,21 @@
 ## Modeling Premier League results 
+# Last update: 07-08-2017
+setwd("~/Dropbox/github/premier_league")
 
-#------------------------------------------------------------------------------
-#### 1) Libraries ####
+## Libraries 
 library(R2jags)
 library(rjags)
 library(jagstools)
 library(mcmcplots)
 library(stringr)
 
-#------------------------------------------------------------------------------
-#### 2) Data ####
-pl<-read.csv("PremierLeague.csv",header=TRUE,             # Historical PL data
-             sep=",",row.names=NULL,stringsAsFactors=FALSE)
-pl1<-read.csv("PremierLeagueCurrent.csv",header=TRUE,     # Current PL season
+#### Data ####
+#pl<-read.csv("PremierLeague.csv",header=TRUE,             # Historical PL data
+#             sep=",",row.names=NULL,stringsAsFactors=FALSE)
+X<-read.csv("PremierLeague_1617.csv",header=TRUE,     # 2016/17 season
              sep=",",row.names=NULL,stringsAsFactors=FALSE)
 
-#------------------------------------------------------------------------------
-#### 3) Regression model ####
+#### Regression model ####
 
 M<-function() {
   # LIKELIHOOD AND RANDOM EFFECT MODEL FOR THE SCORING PROPENSITY
@@ -48,8 +47,7 @@ M<-function() {
   tau.def ~ dgamma(.01,.01)
 }
 
-#------------------------------------------------------------------------------
-#### 4) Plot results ####
+#### Plot ranking ####
 rankPlot<-function(x){
   ## Plot results from JAGS model fit
   ## Ranking teams based on estimated skills.
@@ -75,8 +73,7 @@ rankPlot<-function(x){
   axis(1, tick=F)
 }
 
-#------------------------------------------------------------------------------
-#### 5) Plot estimated effects ####
+#### Plot estimated effects ####
 effPlot<-function(x){
   # Get data for average effects
   att<-x$BUGSoutput$summary[1:20,1]
